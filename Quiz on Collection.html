@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Java Collections Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      background: linear-gradient(to right, #e0eafc, #cfdef3);
+    }
+    .quiz-container {
+      background: #fff;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 900px;
+      margin: auto;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .question p {
+      font-weight: bold;
+      color: #34495e;
+    }
+    .options label {
+      display: block;
+      margin-bottom: 8px;
+      background: #f0f8ff;
+      padding: 8px;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+    .options label:hover {
+      background: #d6eaf8;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .result {
+      font-weight: bold;
+      color: #27ae60;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 20px;
+    }
+    .timer {
+      text-align: right;
+      font-size: 18px;
+      font-weight: bold;
+      color: #e74c3c;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h2>Java Collections Framework Quiz</h2>
+    <div class="timer" id="timer">Time left: 15:00</div>
+    <form id="quizForm"></form>
+    <button onclick="submitQuiz()">Submit Quiz</button>
+    <p id="result" class="result"></p>
+  </div>
+  <script>
+    const questions = [
+      { q: "What does the Java Collections Framework provide?", options: ["File handling classes", "Database access tools", "Data structure implementations", "Web development support"], correct: 2 },
+      { q: "Which one is a utility class?", options: ["Collection", "Collections", "List", "Set"], correct: 1 },
+      { q: "Which interface allows duplicate elements and maintains insertion order?", options: ["Set", "List", "Map", "Queue"], correct: 1 },
+      { q: "Which is faster for inserting elements in the middle of a list?", options: ["ArrayList", "LinkedList", "Vector", "HashSet"], correct: 1 },
+      { q: "Which of the following does NOT allow duplicate elements?", options: ["ArrayList", "LinkedList", "HashSet", "Vector"], correct: 2 },
+      { q: "Which structure does HashMap use internally?", options: ["Tree", "Graph", "Hashtable", "Array of buckets"], correct: 3 },
+      { q: "What ensures uniqueness in HashSet?", options: ["Uses keys of a HashMap", "Uses TreeMap", "Stores values in a Set", "Compares object size"], correct: 0 },
+      { q: "Which iterator throws ConcurrentModificationException?", options: ["Safe iterator", "Buffered iterator", "Fail-fast iterator", "Fail-safe iterator"], correct: 2 },
+      { q: "Which interface allows custom sorting?", options: ["Serializable", "Runnable", "Comparable", "Comparator"], correct: 3 },
+      { q: "Default load factor of HashMap?", options: ["1.0", "0.5", "0.75", "2.0"], correct: 2 },
+      { q: "Which class maintains insertion order?", options: ["HashMap", "TreeMap", "LinkedHashMap", "EnumMap"], correct: 2 },
+      { q: "Which of the following is synchronized?", options: ["ArrayList", "HashMap", "Vector", "LinkedList"], correct: 2 },
+      { q: "Which is not part of the Java Collections Framework?", options: ["TreeSet", "HashMap", "Array", "LinkedList"], correct: 2 },
+      { q: "Which interface does TreeMap implement?", options: ["Map", "SortedMap", "NavigableMap", "All of the above"], correct: 3 },
+      { q: "Which method is used to sort a list?", options: ["Collections.order()", "List.sort()", "Collections.sort()", "ArrayList.sort()"], correct: 2 },
+      { q: "Which map allows null keys and values?", options: ["HashMap", "TreeMap", "Hashtable", "ConcurrentHashMap"], correct: 0 },
+      { q: "Which one is thread-safe and allows concurrency?", options: ["HashMap", "ConcurrentHashMap", "TreeMap", "EnumMap"], correct: 1 },
+      { q: "What is returned by poll() in Queue if it’s empty?", options: ["null", "throws Exception", "0", "-1"], correct: 0 },
+      { q: "Which interface allows element retrieval without removal?", options: ["peek()", "poll()", "pop()", "remove()"], correct: 0 },
+      { q: "Which queue implementation allows priority elements?", options: ["LinkedList", "ArrayDeque", "PriorityQueue", "HashSet"], correct: 2 },
+      { q: "Which collection class allows duplicate keys?", options: ["HashMap", "TreeMap", "None", "Hashtable"], correct: 2 },
+      { q: "Which collection is best suited for LIFO operations?", options: ["Queue", "Deque", "Stack", "Set"], correct: 2 },
+      { q: "Which of the following allows random access?", options: ["ArrayList", "LinkedList", "HashSet", "TreeSet"], correct: 0 },
+      { q: "Which data structure is used by PriorityQueue?", options: ["Binary Heap", "Stack", "Deque", "Array"], correct: 0 },
+      { q: "Which method removes all elements from a collection?", options: ["delete()", "clear()", "removeAll()", "purge()"], correct: 1 },
+      { q: "Which map implementation is ordered by keys?", options: ["HashMap", "LinkedHashMap", "TreeMap", "WeakHashMap"], correct: 2 },
+      { q: "Which interface provides functionality to navigate a map?", options: ["SortedMap", "NavigableMap", "ConcurrentMap", "AbstractMap"], correct: 1 },
+      { q: "Which method is used to retrieve value for a key in Map?", options: ["fetch()", "look()", "get()", "find()"], correct: 2 },
+      { q: "Which Set implementation maintains insertion order?", options: ["HashSet", "TreeSet", "LinkedHashSet", "EnumSet"], correct: 2 },
+      { q: "What does size() method return for an empty list?", options: ["null", "undefined", "0", "-1"], correct: 2 }
+    ];
+
+    const form = document.getElementById("quizForm");
+    questions.forEach((q, i) => {
+      const qDiv = document.createElement("div");
+      qDiv.classList.add("question");
+      qDiv.innerHTML = `<p>${i + 1}. ${q.q}</p>`;
+      const opts = q.options.map((opt, j) => `
+        <label><input type="radio" name="q${i}" value="${j}" required> ${opt}</label>
+      `).join("");
+      qDiv.innerHTML += `<div class="options">${opts}</div>`;
+      form.appendChild(qDiv);
+    });
+
+    function submitQuiz() {
+      clearInterval(timerInterval);
+      let score = 0;
+      questions.forEach((q, i) => {
+        const selected = document.querySelector(`input[name=q${i}]:checked`);
+        if (selected && parseInt(selected.value) === q.correct) {
+          score++;
+        }
+      });
+      document.getElementById("result").textContent = `You scored ${score} out of ${questions.length}`;
+    }
+
+    // Timer (15 minutes)
+    let timeLeft = 15 * 60;
+    const timerDisplay = document.getElementById("timer");
+    const timerInterval = setInterval(() => {
+      let minutes = Math.floor(timeLeft / 60);
+      let seconds = timeLeft % 60;
+      timerDisplay.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        submitQuiz();
+      }
+      timeLeft--;
+    }, 1000);
+  </script>
+</body>
+</html>
